@@ -1,1 +1,1 @@
-# CPP-GUI-Programming-with-Qt-4
+# C++ GUI Programming with Qt 4
