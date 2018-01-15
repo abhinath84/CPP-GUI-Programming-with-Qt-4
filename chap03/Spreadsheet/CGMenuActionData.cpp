@@ -1,0 +1,6 @@
+#include "CGMenuActionData"
+
+CGMenuActionData::CGMenuActionData()
+{
+
+}

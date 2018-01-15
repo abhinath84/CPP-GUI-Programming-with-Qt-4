@@ -1,0 +1,56 @@
+#ifndef CGMENUACTIONDATA_H
+#define CGMENUACTIONDATA_H
+
+#include <QtCore>
+
+
+class CGMenuActionData
+{
+public:
+    CGMenuActionData();
+    CGMenuActionData(QObject *parent);
+    CGMenuActionData(QObject *parent, const QString &text, const QString &icon,
+                     const QString &shortcut, const QString &statustip,
+                     QObject *receiver,const QString &signal, const QString &slot);
+    CGMenuActionData(const CGMenuActionData &other);
+    ~CGMenuActionData();
+
+    CGMenuActionData& operator=(const CGMenuActionData &other);
+
+public:
+    void setParent(QObject *parent);
+    QObject* Parent() const;
+
+    void setReceiver(QObject *receiver);
+    QObject* Receiver() const;
+
+    void setText(const QString &text);
+    QString Text() const;
+
+    void setIcon(const QString &icon);
+    QString Icon() const;
+
+    void setShortcut(const QString &shortcut);
+    QString Shortcut() const;
+
+    void setStatusTip(const QString &statusTip);
+    QString StatusTip() const;
+
+    void setSignal(const QString &signal);
+    QString Signal() const;
+
+    void setSlot(const QString &slot);
+    QString Slot() const;
+
+private:
+    QObject *parent;
+    QObject *receiver;
+    QString strText;
+    QString strIcon;
+    QString strShortcut;
+    QString strStatusTip;
+    QString strSignal;
+    QString strSlot;
+};
+
+#endif // CGMENUACTIONDATA
