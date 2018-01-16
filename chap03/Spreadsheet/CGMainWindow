@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+#include <CGMenuActionData>
+
+
 class QAction;
 class QLabel;
 class CGFindDialog;
@@ -50,7 +53,7 @@ private:
     QString strippedName(const QString &fullFileName);
 
 private:
-    void createMenuAction(QAction *action, const CGMenuActionData &data);
+    bool createAction(QAction **action, const CGMenuActionData &data);
 
 private:
     CGSpreadsheet   *spreadsheet;

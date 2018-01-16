@@ -1,7 +1,7 @@
 #include <QtWidgets>
 #include <CGFindDialog>
-//#include <CGGoToCell>
-//#include <CGSortDialog>
+#include <CGGoToCellDialog>
+#include <CGSortDialog>
 //#include <CGSpreadsheet>
 #include <CGMenuActionData>
 
@@ -28,30 +28,37 @@ CGMainWindow::CGMainWindow()
 
 void CGMainWindow::createActions()
 {
-    /*actNew = new QAction(tr("&New"), this);
-    actNew->setIcon(QIcon(":/images/new.png"));
-    actNew->setShortcut(tr("Ctrl+N"));
-    actNew->setStatusTip(tr("Create a new spreadsheet file"));
-    connect(actNew, &QAction::triggered,
-            this, &CGMainWindow::newFile);*/
+    createAction( actNew, CGMenuActionData(this, "&New", ":/images/new.png",
+                            QKeySequence::New,"Create a new spreadsheet file",
+                            this, SIGNAL(triggered()), SLOT(newFile())) );
 
-//    CGMenuActionData data(this, "&New", ":/images/new.png", "Ctrl+N",
-//                          "Create a new spreadsheet file", this,
-//                          SIGNAL(triggered(bool), SLOT(newFile()));
-    createMenuAction(actNew, CGMenuActionData((this, "&New", ":/images/new.png", "Ctrl+N",
-                                               "Create a new spreadsheet file", this,
-                                               SIGNAL(triggered(bool)), SLOT(newFile()))));
+    createAction( openAction, CGMenuActionData(this, "&Open...", ":/images/open.png",
+                            QKeySequence::Open,"Open an existing spreadsheet file",
+                            this, SIGNAL(triggered()), SLOT(open())) );
+
+    createAction( saveAction, CGMenuActionData(this, "&Save", ":/images/save.png",
+                            QKeySequence::Save,"Save the spreadsheet to disk",
+                            this, SIGNAL(triggered()), SLOT(save())) );
+
+    createAction( saveAsAction, CGMenuActionData(this, "Save &As...", "",
+                            QKeySequence::SaveAs,"Save the spreadsheet under a new name",
+                            this, SIGNAL(triggered()), SLOT(saveAs())) );
+
+    for (int i = 0; i < MaxRecentFiles; ++i)
+    {
+        recentFileActions[i] = new QAction(this);
+        recentFileActions[i]->setVisible(false);
+        connect(recentFileActions[i], SIGNAL(triggered()),
+                this, SLOT(openRecentFile()));
+    }
 }
 
-void CGMainWindow::createMenuAction(QAction *action, const CGMenuActionData &data)
+bool CGMainWindow::createAction(QAction **action, const CGMenuActionData &data)
 {
-    if(( action != NULL ) && ( data.isProper() ))
-    {
-        action = new QAction(tr(data.Text()), data.Parent());
-        action->setIcon(QIcon(data.Icon()));
-        action->setShortcut(tr(data.Shortcut()));
-        action->setStatusTip(tr(data.StatusTip()));
-        connect(action, data.Signal().toStdString().c_str(),
-                data.Receiver, data.Slot().toStdString().c_str());
-    }
+    bool status = false;
+
+    if(action != NULL)
+        status = data.setAction(action);
+
+    return(status);
 }

@@ -1,18 +1,22 @@
 #ifndef CGMENUACTIONDATA_H
 #define CGMENUACTIONDATA_H
 
+#include <string>
+
 #include <QObject>
-#include <QString>
 #include <QAction>
+#include <QKeySequence>
+
+using std::string;
 
 class CGMenuActionData
 {
 public:
     CGMenuActionData();
     CGMenuActionData(QObject *parent);
-    CGMenuActionData(QObject *parent, const QString &text, const QString &icon,
-                     const QString &shortcut, const QString &statustip,
-                     QObject *receiver,const QString &signal, const QString &slot);
+    CGMenuActionData(QObject *parent, const string &text, const string &icon,
+                     const QKeySequence &shortcut, const string &statustip,
+                     QObject *receiver,const string &signal, const string &slot);
     CGMenuActionData(const CGMenuActionData &other);
     ~CGMenuActionData();
 
@@ -25,37 +29,37 @@ public:
     void setReceiver(QObject *receiver);
     QObject* Receiver() const;
 
-    void setText(const QString &text);
-    QString Text() const;
+    void setText(const string &text);
+    string Text() const;
 
-    void setIcon(const QString &icon);
-    QString Icon() const;
+    void setIcon(const string &icon);
+    string Icon() const;
 
-    void setShortcut(const QString &shortcut);
-    QString Shortcut() const;
+    void setShortcut(const QKeySequence &shortcut);
+    QKeySequence Shortcut() const;
 
-    void setStatusTip(const QString &statustip);
-    QString StatusTip() const;
+    void setStatusTip(const string &statustip);
+    string StatusTip() const;
 
-    void setSignal(const QString &signal);
-    QString Signal() const;
+    void setSignal(const string &signal);
+    string Signal() const;
 
-    void setSlot(const QString &slot);
-    QString Slot() const;
+    void setSlot(const string &slot);
+    string Slot() const;
 
     bool isProper() const;
 
     bool setAction(QAction **action);
 
 private:
-    QObject **parent;
-    QObject **receiver;
-    QString strText;
-    QString strIcon;
-    QString strShortcut;
-    QString strStatusTip;
-    QString strSignal;
-    QString strSlot;
+    QObject         **parent;
+    QObject         **receiver;
+    string          strText;
+    string          strIcon;
+    QKeySequence    ksShortcut;
+    string          strStatusTip;
+    string          strSignal;
+    string          strSlot;
 };
 
 #endif // CGMENUACTIONDATA

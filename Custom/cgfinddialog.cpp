@@ -123,20 +123,33 @@ void CGFindDialog::createAction(QAction **action, const CGMenuActionData &data)
 {
     if(( action != NULL ) && ( data.isProper() ))
     {
-        *action = new QAction(tr(data.Text().toStdString().c_str()), data.Parent());
-        (*action)->setIcon(QIcon(data.Icon().toStdString().c_str()));
-        (*action)->setShortcut(tr(data.Shortcut().toStdString().c_str()));
-        (*action)->setStatusTip(tr(data.StatusTip().toStdString().c_str()));
-        connect(*action, data.Signal().toStdString().c_str(),
-                data.Receiver(), data.Slot().toStdString().c_str());
+        *action = new QAction(tr(data.Text().c_str()), data.Parent());
+        (*action)->setIcon(QIcon(data.Icon().c_str()));
+        (*action)->setShortcut(data.Shortcut());
+        (*action)->setStatusTip(tr(data.StatusTip().c_str()));
+        connect(*action, data.Signal().c_str(),
+                data.Receiver(), data.Slot().c_str());
     }
 }
 
 void CGFindDialog::func(QAction **act)
 {
-    CGMenuActionData data(this, "&New", ":/images/new.png", "Ctrl+N",
-                          "Create a new spreadsheet file", this,
-                          SIGNAL(triggered(bool)), SLOT(accept()));
-    //createAction(act, data);
+//    CGMenuActionData data(this, "&New", ":/images/new.png", "Ctrl+N",
+//                          "Create a new spreadsheet file", this,
+//                          SIGNAL(triggered(bool)), SLOT(accept()));
+//    //createAction(act, data);
+//    data.setAction(act);
+
+    CGMenuActionData data(this);
+
+    // actNew Action.
+    data.setText("&New");
+    data.setIcon(":/images/new.png");
+    data.setShortcut(QKeySequence::New);
+    data.setStatusTip("Create a new spreadsheet file");
+    data.setReceiver(this);
+    data.setSignal(SIGNAL(triggered(bool)));
+    data.setSlot(SLOT(newFile()));
+
     data.setAction(act);
 }
