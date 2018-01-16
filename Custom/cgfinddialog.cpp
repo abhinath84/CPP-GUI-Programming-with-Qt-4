@@ -149,7 +149,8 @@ void CGFindDialog::func(QAction **act)
     data.setStatusTip("Create a new spreadsheet file");
     data.setReceiver(this);
     data.setSignal(SIGNAL(triggered(bool)));
-    data.setSlot(SLOT(newFile()));
+    //data.setSlot(SLOT(newFile()));
+    data.setSlot(SLOT(reject()));
 
     data.setAction(act);
 }

@@ -1,5 +1,5 @@
-#ifndef SORTDIALOG_H
-#define SORTDIALOG_H
+#ifndef CGSORTDIALOG_H
+#define CGSORTDIALOG_H
 
 #include <QDialog>
 
@@ -49,4 +49,4 @@ private:
     QPushButton         *btnMore;
 };
 
-#endif // SORTDIALOG_H
+#endif // CGSORTDIALOG_H

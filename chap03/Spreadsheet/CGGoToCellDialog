@@ -1,5 +1,5 @@
-#ifndef GOTOCELLDIALOG_H
-#define GOTOCELLDIALOG_H
+#ifndef CGGOTOCELLDIALOG_H
+#define CGGOTOCELLDIALOG_H
 
 #include <QDialog>
 
@@ -25,4 +25,4 @@ private:
     QPushButton *btnCancel;
 };
 
-#endif // GOTOCELLDIALOG_H
+#endif // CGGOTOCELLDIALOG_H

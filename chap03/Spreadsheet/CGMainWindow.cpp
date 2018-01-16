@@ -1,10 +1,9 @@
-#include <QtWidgets>
-#include <CGFindDialog>
-#include <CGGoToCellDialog>
-#include <CGSortDialog>
-//#include <CGSpreadsheet>
-#include <CGMenuActionData>
+#include <QWidget>
 
+#include <CGFindDialog>
+#include "CGGoToCellDialog"
+#include "CGSortDialog"
+//#include <CGSpreadsheet>
 #include "CGMainWindow"
 
 CGMainWindow::CGMainWindow()
@@ -20,7 +19,7 @@ CGMainWindow::CGMainWindow()
 
     readSettings();
 
-    find = 0;
+    findDialog = 0;
 
     setWindowIcon(QIcon(":/images/icon.png"));
     setCurrentFile("");

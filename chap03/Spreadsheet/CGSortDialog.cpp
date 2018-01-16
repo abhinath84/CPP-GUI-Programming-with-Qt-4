@@ -7,7 +7,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-#include <CGSortDialog>
+#include "CGSortDialog"
 
 
 CGSortDialog::CGSortDialog(QWidget *parent)

@@ -2,7 +2,8 @@
 #define CGFINDDIALOG_H
 
 #include <QDialog>
-#include <CGMenuActionData>
+
+#include "CGMenuActionData"
 
 class QLabel;
 class QLineEdit;

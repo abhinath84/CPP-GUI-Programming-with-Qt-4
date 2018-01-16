@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include <CGMenuActionData>
+#include "CGMenuActionData"
 
 
 class QAction;
@@ -57,7 +57,7 @@ private:
 
 private:
     CGSpreadsheet   *spreadsheet;
-    CGFindDialog    *find;
+    CGFindDialog    *findDialog;
     QLabel          *lblLocation;
     QLabel          *lblFormula;
     QStringList     strListRecentFiles;
