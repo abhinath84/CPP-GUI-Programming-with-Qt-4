@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 
-#include "CGMenuActionData"
-
 
 class QAction;
 class QLabel;
@@ -51,9 +49,6 @@ private:
     void setCurrentFile(const QString &fileName);
     void updateRecentFileActions();
     QString strippedName(const QString &fullFileName);
-
-private:
-    bool createAction(QAction **action, const CGMenuActionData &data);
 
 private:
     CGSpreadsheet   *spreadsheet;

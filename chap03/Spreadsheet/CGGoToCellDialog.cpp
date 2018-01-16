@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 #include <QRegExpValidator>
 
-#include "CGGoToCellDialog"
+#include "CGGoToCellDialog.h"
 
 /*
  * Parent & child hierarchy of Find dialog widgets.

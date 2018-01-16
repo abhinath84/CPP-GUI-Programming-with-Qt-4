@@ -1,4 +1,4 @@
-#include "CGMenuActionData"
+#include "CGMenuActionData.h"
 
 CGMenuActionData::CGMenuActionData()
     :parent(new QObject*[1]),

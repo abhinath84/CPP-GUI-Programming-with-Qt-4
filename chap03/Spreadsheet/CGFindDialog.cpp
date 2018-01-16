@@ -7,7 +7,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-#include "CGFindDialog"
+#include "CGFindDialog.h"
 
 CGFindDialog::CGFindDialog(QWidget *parent)
     :QDialog(parent),
