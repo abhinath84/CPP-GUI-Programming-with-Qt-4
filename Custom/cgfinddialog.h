@@ -2,12 +2,14 @@
 #define CGFINDDIALOG_H
 
 #include <QDialog>
+#include <CGMenuActionData>
 
 class QLabel;
 class QLineEdit;
 class QCheckBox;
 class QDialogButtonBox;
 class QPushButton;
+class QAction;
 
 class CGFindDialog : public QDialog
 {
@@ -26,6 +28,10 @@ private slots:
     void enableFindButton(const QString &text);
 
 private:
+    void func(QAction **act);
+    void createAction(QAction **act, const CGMenuActionData &data);
+
+private:
     QWidget             *extension;
     QLabel              *lblFindWhat;
     QLineEdit           *txtFindWhat;
@@ -38,6 +44,8 @@ private:
     QPushButton         *btnFind;
     QPushButton         *btnCancel;
     QPushButton         *btnMore;
+
+    QAction             *act;
 };
 
 #endif // CGFINDDIALOG_H

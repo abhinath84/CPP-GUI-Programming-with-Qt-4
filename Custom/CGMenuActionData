@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QString>
-
+#include <QAction>
 
 class CGMenuActionData
 {
@@ -44,6 +44,8 @@ public:
     QString Slot() const;
 
     bool isProper() const;
+
+    bool setAction(QAction **action);
 
 private:
     QObject **parent;

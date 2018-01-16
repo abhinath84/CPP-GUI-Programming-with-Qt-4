@@ -1,8 +1,8 @@
 #include "CGMenuActionData"
 
 CGMenuActionData::CGMenuActionData()
-    :parent(new QObject()),
-      receiver(new QObject()),
+    :parent(new QObject*[1]),
+      receiver(new QObject*[1]),
       strText(),
       strIcon(),
       strShortcut(),
@@ -13,8 +13,8 @@ CGMenuActionData::CGMenuActionData()
 }
 
 CGMenuActionData::CGMenuActionData(QObject *parent)
-    :parent(new QObject()),
-      receiver(new QObject()),
+    :parent(new QObject*[1]),
+      receiver(new QObject*[1]),
       strText(),
       strIcon(),
       strShortcut(),
@@ -22,15 +22,14 @@ CGMenuActionData::CGMenuActionData(QObject *parent)
       strSignal(),
       strSlot()
 {
-    parent = parent;
-    receiver = 0;
+    this->parent[0] = parent;
 }
 
 CGMenuActionData::CGMenuActionData(QObject *parent, const QString &text, const QString &icon,
                  const QString &shortcut, const QString &statustip,
                  QObject *receiver,const QString &signal, const QString &slot)
-    :parent(new QObject()),
-      receiver(new QObject()),
+    :parent(new QObject*[1]),
+      receiver(new QObject*[1]),
       strText(text),
       strIcon(icon),
       strShortcut(shortcut),
@@ -38,13 +37,13 @@ CGMenuActionData::CGMenuActionData(QObject *parent, const QString &text, const Q
       strSignal(signal),
       strSlot(slot)
 {
-    parent = parent;
-    receiver = receiver;
+    this->parent[0] = parent;
+    this->receiver[0] = receiver;
 }
 
 CGMenuActionData::CGMenuActionData(const CGMenuActionData &other)
-    :parent(new QObject()),
-      receiver(new QObject()),
+    :parent(other.parent),
+      receiver(other.receiver),
       strText(other.strText),
       strIcon(other.strIcon),
       strShortcut(other.strShortcut),
@@ -52,73 +51,59 @@ CGMenuActionData::CGMenuActionData(const CGMenuActionData &other)
       strSignal(other.strSignal),
       strSlot(other.strSlot)
 {
-    parent = *other.parent;
-    receiver = *other.receiver;
 }
 
 CGMenuActionData::~CGMenuActionData()
 {
-    if(parent != NULL)
-    {
-        delete parent;
-        parent = 0;
-    }
+    delete[] parent;
+    parent = 0;
 
-    if(receiver != NULL)
-    {
-        delete receiver;
-        parent = 0;
-    }
+    delete[] receiver;
+    receiver = 0;
 }
 
 CGMenuActionData& CGMenuActionData::operator=(const CGMenuActionData &other)
 {
-    if(parent != NULL)
+    if(this != &other)
     {
-        delete parent;
-        parent = 0;
+        parent = other.parent;
+        receiver = other.receiver;
+
+        strText = other.strText;
+        strIcon = other.strIcon;
+        strShortcut = other.strShortcut;
+        strStatusTip = other.strStatusTip;
+        strSignal = other.strSignal;
+        strSlot = other.strSlot;
     }
 
-    if(receiver != NULL)
-    {
-        delete receiver;
-        receiver = 0;
-    }
-
-    parent = new QObject();
-    parent = *other.parent;
-
-    receiver = new QObject();
-    receiver = *other.receiver;
-
-    strText = other.strText;
-    strIcon = other.strIcon;
-    strShortcut = other.strShortcut;
-    strStatusTip = other.strStatusTip;
-    strSignal = other.strSignal;
-    strSlot = other.strSlot;
+    return(*this);
 }
 
 void CGMenuActionData::setParent(QObject *parent)
 {
     if(parent != NULL)
-        this->parent = parent;
+    {
+        this->parent[0] = parent;
+    }
 }
 
 QObject* CGMenuActionData::Parent() const
 {
-    return (*parent);
+    return (this->parent[0]);
 }
 
 void CGMenuActionData::setReceiver(QObject *receiver)
 {
     if(receiver != NULL)
-        this->receiver = receiver;
+    {
+        this->receiver[0] = receiver;
+    }
 }
 
 QObject* CGMenuActionData::Receiver() const
 {
-    return (*receiver);
+    return (this->receiver[0]);
 }
 
 void CGMenuActionData::setText(const QString &text)
@@ -191,9 +176,9 @@ bool CGMenuActionData::isProper() const
 {
     bool status = true;
 
-    if((parent == NULL) && (*parent != NULL))
+    if((parent == 0) || (parent[0] == NULL))
         status = false;
-    if((receiver == NULL) && (*receiver != NULL))
+    if((receiver == 0) || (receiver[0] == NULL))
         status = false;
 
     if( strText.isEmpty())
@@ -208,6 +193,23 @@ bool CGMenuActionData::isProper() const
         status = false;
     if( strSlot.isEmpty())
         status = false;
+
+    return(status);
+}
+
+bool CGMenuActionData::setAction(QAction **action)
+{
+    bool status = false;
+
+    if( ( action != NULL ) && ( isProper() ) )
+    {
+        *action = new QAction(QObject::tr(Text().toStdString().c_str()), Parent());
+        (*action)->setIcon(QIcon(Icon().toStdString().c_str()));
+        (*action)->setShortcut(QObject::tr(Shortcut().toStdString().c_str()));
+        (*action)->setStatusTip(QObject::tr(StatusTip().toStdString().c_str()));
+        QObject::connect(*action, Signal().toStdString().c_str(),
+                Receiver(), Slot().toStdString().c_str());
+    }
 
     return(status);
 }

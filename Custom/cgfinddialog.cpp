@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QAction>
 
 #include "cgfinddialog.h"
 
@@ -86,6 +87,8 @@ CGFindDialog::CGFindDialog(QWidget *parent)
     gloMain->addWidget(extension, 1, 0, 1, 2);
     gloMain->setRowStretch(2, 1);
 
+    func(&act);
+
     setLayout(gloMain);
     setWindowTitle(tr("Find"));
 }
@@ -114,4 +117,26 @@ void CGFindDialog::findClicked()
 void CGFindDialog::enableFindButton(const QString &text)
 {
     btnFind->setEnabled(!text.isEmpty());
+}
+
+void CGFindDialog::createAction(QAction **action, const CGMenuActionData &data)
+{
+    if(( action != NULL ) && ( data.isProper() ))
+    {
+        *action = new QAction(tr(data.Text().toStdString().c_str()), data.Parent());
+        (*action)->setIcon(QIcon(data.Icon().toStdString().c_str()));
+        (*action)->setShortcut(tr(data.Shortcut().toStdString().c_str()));
+        (*action)->setStatusTip(tr(data.StatusTip().toStdString().c_str()));
+        connect(*action, data.Signal().toStdString().c_str(),
+                data.Receiver(), data.Slot().toStdString().c_str());
+    }
+}
+
+void CGFindDialog::func(QAction **act)
+{
+    CGMenuActionData data(this, "&New", ":/images/new.png", "Ctrl+N",
+                          "Create a new spreadsheet file", this,
+                          SIGNAL(triggered(bool)), SLOT(accept()));
+    //createAction(act, data);
+    data.setAction(act);
 }
