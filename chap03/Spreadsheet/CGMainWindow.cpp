@@ -1,7 +1,11 @@
 #include <QtGui>
 #include <QAction>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QLabel>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QStatusBar>
 
 #include "CGFindDialog.h"
 #include "CGGoToCellDialog.h"
@@ -233,4 +237,138 @@ void CGMainWindow::createToolBars()
     tlbEdit->addSeparator();
     tlbEdit->addAction(actFind);
     tlbEdit->addAction(actGoToCell);
+}
+
+void CGMainWindow::createStatusBar()
+{
+    lblLocation = new QLabel("W999");
+    lblLocation->setAlignment(Qt::AlignHCenter);
+    lblLocation->setMinimumSize(lblLocation->sizeHint());
+
+    lblFormula = new QLabel();
+    lblFormula->setIndent(3);
+
+    statusBar()->addWidget(lblLocation);
+    statusBar()->addWidget(lblFormula, 1);
+
+    connect(spreadsheet, &CGSpreadsheet::currentCellChanged,
+            this, &CGMainWindow::updateStatusBar);
+    connect(spreadsheet, &CGSpreadsheet::modified,
+            this, &CGMainWindow::spreadsheetModified);
+
+    updateStatusBar();
+}
+
+void CGMainWindow::updateStatusBar()
+{
+    lblLocation->setText(spreadsheet->currentLocation());
+    lblFormula->setText(spreadsheet->currentFormula());
+}
+
+void CGMainWindow::spreadsheetModified()
+{
+    setWindowModified(true);
+    updateStatusBar();
+}
+
+bool CGMainWindow::okToContinue()
+{
+    bool status = true;
+
+    if(isWindowModified())
+    {
+        int r = QMessageBox::warning(this, tr("Spreadsheet"),
+                                     tr("The document has been modified.\n"
+                                     "Do you want to save your changes?"),
+                                     QMessageBox::Yes | QMessageBox::Default,
+                                     QMessageBox::No,
+                                     QMessageBox::Cancel | QMessageBox::Escape);
+        if(r == QMessageBox::Yes)
+            status = save();
+        else if(r == QMessageBox::Cancel)
+            status = false;
+    }
+
+    return(status);
+}
+
+void CGMainWindow::newFile()
+{
+    if(okToContinue())
+    {
+        spreadsheet->clear();
+        setCurrentFile("");
+    }
+}
+
+void CGMainWindow::open()
+{
+    if(okToContinue())
+    {
+        QString fileName = QFileDialog::getOpenFileName(this,
+                                                tr("Open Spreadsheet"), ".",
+                                                        tr("Spreadsheet files (*.sp)\n"
+                                                        "Comma-separated values files (*.csv)\n"
+                                                        "Lotus 1-2-3 files (*.wk1 *.wks)"));
+
+        if (!fileName.isEmpty())
+            loadFile(fileName);
+    }
+}
+
+bool CGMainWindow::loadFile(const QString &fileName)
+{
+   if( !spreadsheet->readFile(fileName))
+   {
+       statusBar()->showMessage(tr("Loading canceled"), 2000);
+       return false;
+   }
+
+   setCurrentFile(fileName);
+   statusBar()->showMessage(tr("File loaded"), 2000);
+
+   return true;
+}
+
+bool CGMainWindow::save()
+{
+    if(strCurFile.isEmpty())
+        return saveAs();
+    else
+        return saveFile(strCurFile);
+}
+
+bool CGMainWindow::saveFile(const QString &fileName)
+{
+    if( !spreadsheet->writeFile(fileName))
+    {
+        statusBar()->showMessage(tr("Saving canceled"), 2000);
+        return false;
+    }
+
+    setCurrentFile(fileName);
+    statusBar()->showMessage(tr("File saved"), 2000);
+    return true;
+}
+
+bool CGMainWindow::saveAs()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                        tr("Save Spreadsheet"), ".",
+                                        tr("Spreadsheet files (*.sp)"));
+    if (fileName.isEmpty())
+        return false;
+
+    return saveFile(fileName);
+}
+
+void CGMainWindow::closeEvent(QCloseEvent *event)
+{
+    if(okToContinue())
+    {
+        writeSettings();
+        event->accept();
+    }
+    else
+        event->ignore();
 }
