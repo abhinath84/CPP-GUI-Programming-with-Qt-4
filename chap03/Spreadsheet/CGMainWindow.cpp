@@ -372,3 +372,62 @@ void CGMainWindow::closeEvent(QCloseEvent *event)
     else
         event->ignore();
 }
+
+void CGMainWindow::setCurrentFile(const QString &fileName)
+{
+    strCurFile = fileName;
+    setWindowModified(false);
+
+    QString shownName = "Untitled";
+    if (!strCurFile.isEmpty())
+    {
+        shownName = strippedName(strCurFile);
+        strListRecentFiles.removeAll(strCurFile);
+        strListRecentFiles.prepend(strCurFile);
+        updateRecentFileActions();
+    }
+
+    setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(tr("Spreadsheet")));
+}
+
+QString CGMainWindow::strippedName(const QString &fullFileName)
+{
+    return QFileInfo(fullFileName).fileName();
+}
+
+void CGMainWindow::updateRecentFileActions()
+{
+    QMutableStringListIterator i(strListRecentFiles);
+    while (i.hasNext())
+    {
+        if (!QFile::exists(i.next()))
+            i.remove();
+    }
+
+    for (int j = 0; j < MaxRecentFiles; ++j)
+    {
+        if (j < strListRecentFiles.count())
+        {
+            QString text = tr("&%1 %2").arg(j + 1).arg(strippedName(strListRecentFiles[j]));
+            actRecentFiles[j]->setText(text);
+            actRecentFiles[j]->setData(strListRecentFiles[j]);
+            actRecentFiles[j]->setVisible(true);
+        }
+        else
+        {
+            actRecentFiles[j]->setVisible(false);
+        }
+    }
+
+    actSeparator->setVisible(!strListRecentFiles.isEmpty());
+}
+
+void CGMainWindow::openRecentFile()
+{
+    if (okToContinue())
+    {
+        QAction *action = qobject_cast<QAction *>(sender());
+        if (action)
+            loadFile(action->data().toString());
+    }
+}
