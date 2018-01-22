@@ -6,6 +6,7 @@
 class QLabel;
 class QLineEdit;
 class QPushButton;
+class QString;
 
 class CGGoToCellDialog : public QDialog
 {
@@ -14,6 +15,8 @@ class CGGoToCellDialog : public QDialog
 public:
     CGGoToCellDialog(QWidget *parent=0);
     ~CGGoToCellDialog();
+
+    QString Location() const;
 
 private slots:
     void on_lineEdit_textChanged();

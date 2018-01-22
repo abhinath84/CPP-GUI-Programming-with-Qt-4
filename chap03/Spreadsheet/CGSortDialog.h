@@ -18,6 +18,24 @@ class CGSortDialog : public QDialog
 public:
     CGSortDialog(QWidget *parent = 0);
 
+    int PrimaryColumnCurrentIndex() const;
+    int PrimaryOrderCurrentIndex() const;
+
+    QString PrimaryColumnText() const;
+    QString PrimaryOrderText() const;
+
+    int SecondaryColumnCurrentIndex() const;
+    int SecondaryOrderCurrentIndex() const;
+
+    QString SecondaryColumnText() const;
+    QString SecondaryOrderText() const;
+
+    int TertiaryColumnCurrentIndex() const;
+    int TertiaryOrderCurrentIndex() const;
+
+    QString TertiaryColumnText() const;
+    QString TertiaryOrderText() const;
+
     void setColumnRange(QChar first, QChar last);
 
 private:

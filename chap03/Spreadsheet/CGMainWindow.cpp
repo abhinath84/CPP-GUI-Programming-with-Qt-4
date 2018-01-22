@@ -431,3 +431,66 @@ void CGMainWindow::openRecentFile()
             loadFile(action->data().toString());
     }
 }
+
+void CGMainWindow::find()
+{
+    if( !findDialog )
+    {
+        findDialog = new CGFindDialog(this);
+
+        connect(findDialog, &CGFindDialog::findNext,
+                spreadsheet, &CGSpreadsheet::findNext);
+        connect(findDialog, &CGFindDialog::findPrevious,
+                spreadsheet, &CGSpreadsheet::findPrevious);
+    }
+
+    if (findDialog->isHidden())
+        findDialog->show();
+    else
+        findDialog->activateWindow();
+}
+
+void CGMainWindow::goToCell()
+{
+    CGGoToCellDialog gotocellDialog(this);
+
+    if(gotocellDialog.exec())
+    {
+        QString str = gotocellDialog.Location().toUpper();
+        spreadsheet->setCurrentCell(str.mid(1).toInt() - 1,
+                                    str[0].unicode() - ’A’);
+    }
+}
+
+void CGMainWindow::sort()
+{
+    CGSortDialog dialog(this);
+
+    QTableWidgetSelectionRange range = spreadsheet->selectedRange();
+    dialog.setColumnRange(’A’ + range.leftColumn(),
+                            ’A’ + range.rightColumn());
+
+    if(dialog.exec())
+    {
+        SpreadsheetCompare compare;
+        compare.keys[0] = dialog.PrimaryColumnCurrentIndex();
+        compare.keys[1] = dialog.SecondaryColumnCurrentIndex() - 1;
+        compare.keys[2] = dialog.TertiaryColumnCurrentIndex() - 1;
+        compare.ascending[0] = (dialog.PrimaryOrderCurrentIndex() == 0);
+        compare.ascending[1] = (dialog.SecondaryOrderCurrentIndex() == 0);
+        compare.ascending[2] = (dialog.TertiaryOrderCurrentIndex() == 0);
+
+        spreadsheet->sort(compare);
+    }
+}
+
+void CGMainWindow::about()
+{
+    QMessageBox::about(this, tr("About CG Spreadsheet"),
+                        tr("<h2>Spreadsheet 1.1</h2>"
+                            "<p>Copyright &copy; 2006 CG Software Inc."
+                            "<p>Spreadsheet is a small application that "
+                            "demonstrates QAction, QMainWindow, QMenuBar, "
+                            "QStatusBar, QTableWidget, QToolBar, and many other "
+                            "Qt classes."));
+}

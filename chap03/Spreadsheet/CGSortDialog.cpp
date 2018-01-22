@@ -139,6 +139,66 @@ CGSortDialog::CGSortDialog(QWidget *parent)
     setWindowTitle(tr("Sort"));
 }
 
+int CGSortDialog::PrimaryColumnCurrentIndex() const
+{
+    return(cmbPrimaryKeyColumn->currentIndex());
+}
+
+int CGSortDialog::PrimaryOrderCurrentIndex() const
+{
+    return(cmbPrimaryKeyOrder->currentIndex());
+}
+
+QString CGSortDialog::PrimaryColumnText() const
+{
+    return(cmbPrimaryKeyColumn->currentText());
+}
+
+QString CGSortDialog::PrimaryOrderText() const
+{
+    return(cmbPrimaryKeyOrder->currentText());
+}
+
+int CGSortDialog::SecondaryColumnCurrentIndex() const
+{
+    return(cmbSecondaryKeyColumn->currentIndex());
+}
+
+int CGSortDialog::SecondaryOrderCurrentIndex() const
+{
+    return(cmbSecondaryKeyOrder->currentIndex());
+}
+
+QString CGSortDialog::SecondaryColumnText() const
+{
+    return(cmbSecondaryKeyColumn->currentText());
+}
+
+QString CGSortDialog::SecondaryOrderText() const
+{
+    return(cmbSecondaryKeyOrder->currentText());
+}
+
+int CGSortDialog::TertiaryColumnCurrentIndex() const
+{
+    return(cmbTertiaryKeyColumn->currentIndex());
+}
+
+int CGSortDialog::TertiaryOrderCurrentIndex() const
+{
+    return(cmbTertiaryKeyOrder->currentIndex());
+}
+
+QString CGSortDialog::TertiaryColumnText() const
+{
+    return(cmbTertiaryKeyColumn->currentText());
+}
+
+QString CGSortDialog::TertiaryOrderText() const
+{
+    return(cmbTertiaryKeyOrder->currentText());
+}
+
 void CGSortDialog::setColumnRange(QChar first, QChar last)
 {
     cmbPrimaryKeyColumn->clear();

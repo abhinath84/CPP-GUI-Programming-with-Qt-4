@@ -70,6 +70,11 @@ CGGoToCellDialog::~CGGoToCellDialog()
     delete btnCancel;
 }
 
+QString CGGoToCellDialog::Location() const
+{
+    return(txtLoc->text());
+}
+
 void CGGoToCellDialog::on_lineEdit_textChanged()
 {
     btnOk->setEnabled( txtLoc->hasAcceptableInput() );
