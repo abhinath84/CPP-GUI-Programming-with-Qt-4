@@ -494,3 +494,30 @@ void CGMainWindow::about()
                             "QStatusBar, QTableWidget, QToolBar, and many other "
                             "Qt classes."));
 }
+
+void CGMainWindow::writeSettings()
+{
+    QSettings settings("CG Software Inc.", "Spreadsheet");
+    settings.setValue("geometry", geometry());
+    settings.setValue("recentFiles", strListRecentFiles);
+    settings.setValue("showGrid", actShowGrid->isChecked());
+    settings.setValue("autoRecalc", actAutoRecalc->isChecked());
+}
+
+void CGMainWindow::readSettings()
+{
+    QSettings settings("CG Software Inc.", "Spreadsheet");
+
+    QRect rect = settings.value("geometry",
+                                QRect(200, 200, 400, 400)).toRect();
+    move(rect.topLeft());
+    resize(rect.size());
+
+    strListRecentFiles = settings.value("recentFiles").toStringList();
+    updateRecentFileActions();
+
+    bool showGrid = settings.value("showGrid", true).toBool();
+    actShowGrid->setChecked(showGrid);
+    bool autoRecalc = settings.value("autoRecalc", true).toBool();
+    actAutoRecalc->setChecked(autoRecalc);
+}
