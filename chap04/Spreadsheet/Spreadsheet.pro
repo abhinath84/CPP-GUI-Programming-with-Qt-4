@@ -8,7 +8,8 @@ HEADERS += \
     CGMainWindow.h \
     CGMenuActionData.h \
     CGSortDialog.h \
-    CGSpreadsheet.h
+    CGSpreadsheet.h \
+    CGCell.h
 
 SOURCES += \
     CGMainWindow.cpp \
@@ -17,7 +18,8 @@ SOURCES += \
     CGMenuActionData.cpp \
     CGGoToCellDialog.cpp \
     CGSortDialog.cpp \
-    CGSpreadsheet.cpp
+    CGSpreadsheet.cpp \
+    CGCell.cpp
 
 RESOURCES += \
     spreadsheet.qrc
