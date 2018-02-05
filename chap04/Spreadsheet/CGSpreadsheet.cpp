@@ -302,3 +302,72 @@ void CGSpreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
     }
     QApplication::beep();
 }
+
+void CGSpreadsheet::recalculate()
+{
+    for (int row = 0; row < RowCount; ++row)
+    {
+        for (int column = 0; column < ColumnCount; ++column)
+        {
+            if (cell(row, column))
+                cell(row, column)->setDirty();
+        }
+    }
+    viewport()->update();
+}
+
+void CGSpreadsheet::setAutoRecalculate(bool recalc)
+{
+    autoRecalc = recalc;
+    if (autoRecalc)
+        recalculate();
+}
+
+void CGSpreadsheet::sort(const CGSpreadsheetCompare &compare)
+{
+    QList<QStringList> rows;
+    QTableWidgetSelectionRange range = selectedRange();
+    int i;
+
+    for (i = 0; i < range.rowCount(); ++i)
+    {
+        QStringList row;
+        for (int j = 0; j < range.columnCount(); ++j)
+        row.append(formula(range.topRow() + i,
+        range.leftColumn() + j));
+        rows.append(row);
+    }
+
+    qStableSort(rows.begin(), rows.end(), compare);
+
+    for (i = 0; i < range.rowCount(); ++i)
+    {
+        for (int j = 0; j < range.columnCount(); ++j)
+            setFormula(range.topRow() + i, range.leftColumn() + j,
+                        rows[i][j]);
+    }
+
+    clearSelection();
+    somethingChanged();
+}
+
+
+bool CGSpreadsheetCompare::operator()(const QStringList &row1,
+                                      const QStringList &row2) const
+{
+    for (int i = 0; i < KeyCount; ++i)
+    {
+        int column = keys[i];
+        if (column != -1)
+        {
+            if (row1[column] != row2[column])
+            {
+                if (ascending[i])
+                    return row1[column] < row2[column];
+                else
+                    return row1[column] > row2[column];
+            }
+        }
+    }
+    return false;
+}

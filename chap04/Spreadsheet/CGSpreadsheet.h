@@ -52,7 +52,7 @@ private:
     bool autoRecalc;
 };
 
-class SpreadsheetCompare
+class CGSpreadsheetCompare
 {
     public:
     bool operator()(const QStringList &row1, const QStringList &row2) const;
