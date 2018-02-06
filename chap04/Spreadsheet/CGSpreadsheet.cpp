@@ -369,5 +369,6 @@ bool CGSpreadsheetCompare::operator()(const QStringList &row1,
             }
         }
     }
+
     return false;
 }
