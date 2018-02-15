@@ -17,7 +17,7 @@ void CGCell::setFormula(const QString &formula)
     setData(Qt::EditRole, formula);
 }
 
-QString CGCell::data(int role) const
+QString CGCell::formula() const
 {
     return( data(Qt::EditRole).toString() );
 }
@@ -62,12 +62,12 @@ QVariant CGCell::value() const
     if (cacheIsDirty)
     {
         cacheIsDirty = false;
-        QString formulaStr = formula();
-        if (formulaStr.startsWith(’\’’))
+        QString formulaStr = this->formula();
+        if (formulaStr.startsWith('\’'))
         {
         cachedValue = formulaStr.mid(1);
         }
-        else if (formulaStr.startsWith(’=’))
+        else if (formulaStr.startsWith('='))
         {
             cachedValue = Invalid;
             QString expr = formulaStr.mid(1);
@@ -99,7 +99,7 @@ QVariant CGCell::evalExpression(const QString &str, int &pos) const
     while (str[pos] != QChar::Null)
     {
         QChar op = str[pos];
-        if (op != ’+’ && op != ’-’)
+        if (op != '+' && op != '-')
             return result;
         ++pos;
 
@@ -107,7 +107,7 @@ QVariant CGCell::evalExpression(const QString &str, int &pos) const
         if (result.type() == QVariant::Double
             && term.type() == QVariant::Double)
         {
-            if (op == ’+’)
+            if (op == '+')
             {
                 result = result.toDouble() + term.toDouble();
             }
@@ -125,13 +125,13 @@ QVariant CGCell::evalExpression(const QString &str, int &pos) const
     return result;
 }
 
-QVariant Cell::evalTerm(const QString &str, int &pos) const
+QVariant CGCell::evalTerm(const QString &str, int &pos) const
 {
     QVariant result = evalFactor(str, pos);
     while (str[pos] != QChar::Null)
     {
         QChar op = str[pos];
-        if (op != ’*’ && op != ’/’)
+        if (op != '*' && op != '/')
             return result;
         ++pos;
 
@@ -139,7 +139,7 @@ QVariant Cell::evalTerm(const QString &str, int &pos) const
         if (result.type() == QVariant::Double
             && factor.type() == QVariant::Double)
         {
-            if (op == ’*’)
+            if (op == '*')
             {
                 result = result.toDouble() * factor.toDouble();
             }
@@ -164,12 +164,12 @@ QVariant Cell::evalTerm(const QString &str, int &pos) const
     return result;
 }
 
-QVariant Cell::evalFactor(const QString &str, int &pos) const
+QVariant CGCell::evalFactor(const QString &str, int &pos) const
 {
     QVariant result;
     bool negative = false;
 
-    if (str[pos] == ’-’)
+    if (str[pos] == '-')
     {
         negative = true;
         ++pos;
@@ -197,10 +197,9 @@ QVariant Cell::evalFactor(const QString &str, int &pos) const
 
         if (regExp.exactMatch(token))
         {
-            int column = token[0].toUpper().unicode() - ’A’;
+            int column = token[0].toUpper().unicode() - 'A';
             int row = token.mid(1).toInt() - 1;
-            CGCell *c = static_cast<CGCell *>(
-            tableWidget()->item(row, column));
+            CGCell *c = static_cast<CGCell *>(tableWidget()->item(row, column));
             if (c)
             {
                 result = c->value();

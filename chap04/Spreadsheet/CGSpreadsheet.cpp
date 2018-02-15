@@ -1,5 +1,6 @@
 #include <QtGui>
 #include <QApplication>
+#include <QMessageBox>
 
 #include "CGCell.h"
 #include "CGSpreadsheet.h"
@@ -33,7 +34,7 @@ void CGSpreadsheet::clear()
     for (int i = 0; i < ColumnCount; ++i)
     {
         QTableWidgetItem *item = new QTableWidgetItem;
-        item->setText(QString(QChar(’A’ + i)));
+        item->setText(QString(QChar('A' + i)));
         setHorizontalHeaderItem(i, item);
     }
 
@@ -79,7 +80,7 @@ void CGSpreadsheet::setFormula(int row, int column, const QString &formula)
 
 QString CGSpreadsheet::currentLocation() const
 {
-    return QChar(’A’ + currentColumn())
+    return QChar('A' + currentColumn())
             + QString::number(currentRow() + 1);
 }
 
@@ -212,9 +213,9 @@ void CGSpreadsheet::paste()
 {
     QTableWidgetSelectionRange range = selectedRange();
     QString str = QApplication::clipboard()->text();
-    QStringList rows = str.split(’\n’);
+    QStringList rows = str.split('\n');
     int numRows = rows.count();
-    int numColumns = rows.first().count(’\t’) + 1;
+    int numColumns = rows.first().count('\t') + 1;
 
     if (range.rowCount() * range.columnCount() != 1
         && (range.rowCount() != numRows
@@ -228,7 +229,7 @@ void CGSpreadsheet::paste()
 
     for (int i = 0; i < numRows; ++i)
     {
-        QStringList columns = rows[i].split(’\t’);
+        QStringList columns = rows[i].split('\t');
         for (int j = 0; j < numColumns; ++j)
         {
             int row = range.topRow() + i;

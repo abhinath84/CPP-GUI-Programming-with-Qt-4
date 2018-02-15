@@ -23,12 +23,12 @@ int main(int argc, char **argv)
     splash->showMessage(QObject::tr("Loading modules..."),
                         topRight, Qt::white);
 
-    loadModules();
+    //loadModules();
 
     splash->showMessage(QObject::tr("Establishing connections..."),
                         topRight, Qt::white);
 
-    establishConnections();
+    //establishConnections();
 
 
     mainwindow.show();

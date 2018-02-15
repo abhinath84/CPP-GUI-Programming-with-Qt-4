@@ -458,7 +458,7 @@ void CGMainWindow::goToCell()
     {
         QString str = gotocellDialog.Location().toUpper();
         spreadsheet->setCurrentCell(str.mid(1).toInt() - 1,
-                                    str[0].unicode() - ’A’);
+                                    str[0].unicode() - 'A');
     }
 }
 
@@ -467,12 +467,12 @@ void CGMainWindow::sort()
     CGSortDialog dialog(this);
 
     QTableWidgetSelectionRange range = spreadsheet->selectedRange();
-    dialog.setColumnRange(’A’ + range.leftColumn(),
-                            ’A’ + range.rightColumn());
+    dialog.setColumnRange('A' + range.leftColumn(),
+                            'A' + range.rightColumn());
 
     if(dialog.exec())
     {
-        SpreadsheetCompare compare;
+        CGSpreadsheetCompare compare;
         compare.keys[0] = dialog.PrimaryColumnCurrentIndex();
         compare.keys[1] = dialog.SecondaryColumnCurrentIndex() - 1;
         compare.keys[2] = dialog.TertiaryColumnCurrentIndex() - 1;
