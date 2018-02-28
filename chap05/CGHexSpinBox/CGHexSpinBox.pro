@@ -8,3 +8,6 @@ HEADERS += \
 SOURCES += \
     CGHexSpinBox.cpp \
     main.cpp
+
+FORMS += \
+    form.ui
