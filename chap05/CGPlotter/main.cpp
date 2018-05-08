@@ -12,17 +12,21 @@ void readFlightCurves(CGPlotter *plotter, const QString &fileName)
     QFile file(fileName);
     double offsX = 0.0;
 
-    if (file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly))
+    {
         QTextStream in(&file);
-        while (!in.atEnd()) {
+        while (!in.atEnd())
+        {
             QString line = in.readLine();
             QStringList coords = line.split(' ',
                                             QString::SkipEmptyParts);
-            if (coords.count() >= 6) {
+            if (coords.count() >= 6)
+            {
                 double x = factX * coords[0].toDouble();
                 if (data[0].isEmpty())
                     offsX = x;
-                for (int i = 0; i < 6; ++i) {
+                for (int i = 0; i < 6; ++i)
+                {
                     double y = coords[pos[i]].toDouble();
                     data[i].append(QPointF(x - offsX,
                                            factY[i] * (y - offsY[i])));
