@@ -8,3 +8,6 @@ HEADERS += \
 SOURCES += \
     CGIconEditor.cpp \
     main.cpp
+
+RESOURCES += \
+    cgiconeditor.qrc
