@@ -10,11 +10,16 @@
 #include <QApplication>
 #include <QMdiSubWindow>
 
-#include "editor.h"
-#include "mainwindow.h"
+#include "cgeditor.h"
+#include "cgmainwindow.h"
 
-MainWindow::MainWindow()
+CGMainWindow::CGMainWindow()
 {
+    /*
+     * In the MainWindow constructor, we create a QMdiArea widget and make it the
+     * central widget. We connect the QWorkspace’s windowActivated() signal to the slot
+     * we will use to keep the window menu up to date.
+    */
     mdiArea = new QMdiArea;
     setCentralWidget(mdiArea);
     connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)),
@@ -26,11 +31,11 @@ MainWindow::MainWindow()
     createStatusBar();
 
     setWindowIcon(QPixmap(":/images/icon.png"));
-    setWindowTitle(tr("MDI Editor"));
+    setWindowTitle(tr("MDI CGEditor"));
     QTimer::singleShot(0, this, SLOT(loadFiles()));
 }
 
-void MainWindow::loadFiles()
+void CGMainWindow::loadFiles()
 {
     QStringList args = QApplication::arguments();
     args.removeFirst();
@@ -44,21 +49,21 @@ void MainWindow::loadFiles()
     mdiArea->activateNextSubWindow();
 }
 
-void MainWindow::newFile()
+void CGMainWindow::newFile()
 {
-    Editor *editor = new Editor;
+    CGEditor *editor = new CGEditor;
     editor->newFile();
     addEditor(editor);
 }
 
-void MainWindow::openFile(const QString &fileName)
+void CGMainWindow::openFile(const QString &fileName)
 {
-    Editor *editor = Editor::openFile(fileName, this);
+    CGEditor *editor = CGEditor::openFile(fileName, this);
     if (editor)
         addEditor(editor);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void CGMainWindow::closeEvent(QCloseEvent *event)
 {
     mdiArea->closeAllSubWindows();
     if (!mdiArea->subWindowList().isEmpty()) {
@@ -68,44 +73,44 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::open()
+void CGMainWindow::open()
 {
-    Editor *editor = Editor::open(this);
+    CGEditor *editor = CGEditor::open(this);
     if (editor)
         addEditor(editor);
 }
 
-void MainWindow::save()
+void CGMainWindow::save()
 {
     if (activeEditor())
         activeEditor()->save();
 }
 
-void MainWindow::saveAs()
+void CGMainWindow::saveAs()
 {
     if (activeEditor())
         activeEditor()->saveAs();
 }
 
-void MainWindow::cut()
+void CGMainWindow::cut()
 {
     if (activeEditor())
         activeEditor()->cut();
 }
 
-void MainWindow::copy()
+void CGMainWindow::copy()
 {
     if (activeEditor())
         activeEditor()->copy();
 }
 
-void MainWindow::paste()
+void CGMainWindow::paste()
 {
     if (activeEditor())
         activeEditor()->paste();
 }
 
-void MainWindow::about()
+void CGMainWindow::about()
 {
     QMessageBox::about(this, tr("About MDI Editor"),
             tr("<h2>Editor 1.1</h2>"
@@ -114,7 +119,7 @@ void MainWindow::about()
                "QMdiArea."));
 }
 
-void MainWindow::updateActions()
+void CGMainWindow::updateActions()
 {
     bool hasEditor = (activeEditor() != 0);
     bool hasSelection = activeEditor()
@@ -137,7 +142,7 @@ void MainWindow::updateActions()
         activeEditor()->windowMenuAction()->setChecked(true);
 }
 
-void MainWindow::createActions()
+void CGMainWindow::createActions()
 {
     newAction = new QAction(tr("&New"), this);
     newAction->setIcon(QIcon(":/images/new.png"));
@@ -234,7 +239,7 @@ void MainWindow::createActions()
     windowActionGroup = new QActionGroup(this);
 }
 
-void MainWindow::createMenus()
+void CGMainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newAction);
@@ -267,7 +272,7 @@ void MainWindow::createMenus()
     helpMenu->addAction(aboutQtAction);
 }
 
-void MainWindow::createToolBars()
+void CGMainWindow::createToolBars()
 {
     fileToolBar = addToolBar(tr("File"));
     fileToolBar->addAction(newAction);
@@ -280,13 +285,13 @@ void MainWindow::createToolBars()
     editToolBar->addAction(pasteAction);
 }
 
-void MainWindow::createStatusBar()
+void CGMainWindow::createStatusBar()
 {
     readyLabel = new QLabel(tr(" Ready"));
     statusBar()->addWidget(readyLabel, 1);
 }
 
-void MainWindow::addEditor(Editor *editor)
+void CGMainWindow::addEditor(CGEditor *editor)
 {
     connect(editor, SIGNAL(copyAvailable(bool)),
             cutAction, SLOT(setEnabled(bool)));
@@ -299,10 +304,10 @@ void MainWindow::addEditor(Editor *editor)
     subWindow->show();
 }
 
-Editor *MainWindow::activeEditor()
+CGEditor *CGMainWindow::activeEditor()
 {
     QMdiSubWindow *subWindow = mdiArea->activeSubWindow();
     if (subWindow)
-        return qobject_cast<Editor *>(subWindow->widget());
+        return qobject_cast<CGEditor *>(subWindow->widget());
     return 0;
 }

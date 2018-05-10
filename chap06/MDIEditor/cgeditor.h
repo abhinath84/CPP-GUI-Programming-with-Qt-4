@@ -3,12 +3,12 @@
 
 #include <QTextEdit>
 
-class Editor : public QTextEdit
+class CGEditor : public QTextEdit
 {
     Q_OBJECT
 
 public:
-    Editor(QWidget *parent = 0);
+    CGEditor(QWidget *parent = 0);
 
     void newFile();
     bool save();
@@ -16,8 +16,8 @@ public:
     QSize sizeHint() const;
     QAction *windowMenuAction() const { return action; }
 
-    static Editor *open(QWidget *parent = 0);
-    static Editor *openFile(const QString &fileName,
+    static CGEditor *open(QWidget *parent = 0);
+    static CGEditor *openFile(const QString &fileName,
                             QWidget *parent = 0);
 
 protected:
@@ -33,6 +33,7 @@ private:
     bool readFile(const QString &fileName);
     bool writeFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
+    void tabSetting();
 
     QString curFile;
     bool isUntitled;

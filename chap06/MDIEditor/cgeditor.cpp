@@ -4,9 +4,9 @@
 #include <QMessageBox>
 #include <QApplication>
 
-#include "editor.h"
+#include "cgeditor.h"
 
-Editor::Editor(QWidget *parent)
+CGEditor::CGEditor(QWidget *parent)
     : QTextEdit(parent)
 {
     action = new QAction(this);
@@ -22,9 +22,11 @@ Editor::Editor(QWidget *parent)
     setWindowIcon(QPixmap(":/images/document.png"));
     setWindowTitle("[*]");
     setAttribute(Qt::WA_DeleteOnClose);
+
+    tabSetting();
 }
 
-void Editor::newFile()
+void CGEditor::newFile()
 {
     static int documentNumber = 1;
 
@@ -35,7 +37,7 @@ void Editor::newFile()
     ++documentNumber;
 }
 
-bool Editor::save()
+bool CGEditor::save()
 {
     if (isUntitled) {
         return saveAs();
@@ -44,7 +46,7 @@ bool Editor::save()
     }
 }
 
-bool Editor::saveAs()
+bool CGEditor::saveAs()
 {
     QString fileName =
             QFileDialog::getSaveFileName(this, tr("Save As"), curFile);
@@ -54,13 +56,13 @@ bool Editor::saveAs()
     return saveFile(fileName);
 }
 
-QSize Editor::sizeHint() const
+QSize CGEditor::sizeHint() const
 {
     return QSize(72 * fontMetrics().width('x'),
                  25 * fontMetrics().lineSpacing());
 }
 
-Editor *Editor::open(QWidget *parent)
+CGEditor *CGEditor::open(QWidget *parent)
 {
     QString fileName =
             QFileDialog::getOpenFileName(parent, tr("Open"), ".");
@@ -70,9 +72,9 @@ Editor *Editor::open(QWidget *parent)
     return openFile(fileName, parent);
 }
 
-Editor *Editor::openFile(const QString &fileName, QWidget *parent)
+CGEditor *CGEditor::openFile(const QString &fileName, QWidget *parent)
 {
-    Editor *editor = new Editor(parent);
+    CGEditor *editor = new CGEditor(parent);
     if (editor->readFile(fileName)) {
         editor->setCurrentFile(fileName);
         return editor;
@@ -82,7 +84,7 @@ Editor *Editor::openFile(const QString &fileName, QWidget *parent)
     }
 }
 
-void Editor::closeEvent(QCloseEvent *event)
+void CGEditor::closeEvent(QCloseEvent *event)
 {
     if (okToContinue()) {
         event->accept();
@@ -91,12 +93,12 @@ void Editor::closeEvent(QCloseEvent *event)
     }
 }
 
-void Editor::documentWasModified()
+void CGEditor::documentWasModified()
 {
     setWindowModified(true);
 }
 
-bool Editor::okToContinue()
+bool CGEditor::okToContinue()
 {
     if (document()->isModified()) {
         int r = QMessageBox::warning(this, tr("MDI Editor"),
@@ -114,7 +116,7 @@ bool Editor::okToContinue()
     return true;
 }
 
-bool Editor::saveFile(const QString &fileName)
+bool CGEditor::saveFile(const QString &fileName)
 {
     if (writeFile(fileName)) {
         setCurrentFile(fileName);
@@ -124,7 +126,7 @@ bool Editor::saveFile(const QString &fileName)
     }
 }
 
-void Editor::setCurrentFile(const QString &fileName)
+void CGEditor::setCurrentFile(const QString &fileName)
 {
     curFile = fileName;
     isUntitled = false;
@@ -134,7 +136,7 @@ void Editor::setCurrentFile(const QString &fileName)
     setWindowModified(false);
 }
 
-bool Editor::readFile(const QString &fileName)
+bool CGEditor::readFile(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -146,13 +148,15 @@ bool Editor::readFile(const QString &fileName)
     }
 
     QTextStream in(&file);
+    in.setCodec("UTF-8");
+
     QApplication::setOverrideCursor(Qt::WaitCursor);
     setPlainText(in.readAll());
     QApplication::restoreOverrideCursor();
     return true;
 }
 
-bool Editor::writeFile(const QString &fileName)
+bool CGEditor::writeFile(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -164,13 +168,30 @@ bool Editor::writeFile(const QString &fileName)
     }
 
     QTextStream out(&file);
+    out.setCodec("UTF-8");
+
     QApplication::setOverrideCursor(Qt::WaitCursor);
     out << toPlainText();
     QApplication::restoreOverrideCursor();
     return true;
 }
 
-QString Editor::strippedName(const QString &fullFileName)
+QString CGEditor::strippedName(const QString &fullFileName)
 {
     return QFileInfo(fullFileName).fileName();
+}
+
+void CGEditor::tabSetting()
+{
+    int tabstop = 2;
+
+    QFontMetricsF fm (this->font());
+    auto stopWidth = tabstop * fm.width(' ');
+    auto letterSpacing = (ceil(stopWidth) - stopWidth) / tabstop;
+
+    auto font = this->font();
+    font.setLetterSpacing(QFont::AbsoluteSpacing, letterSpacing);
+    //this->setFont(font);
+
+    this->setTabStopWidth(ceil(stopWidth));
 }

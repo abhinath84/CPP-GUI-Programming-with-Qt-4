@@ -6,10 +6,10 @@ RESOURCES += \
     mdieditor.qrc
 
 HEADERS += \
-    editor.h \
-    mainwindow.h
+    cgmainwindow.h \
+    cgeditor.h
 
 SOURCES += \
-    editor.cpp \
     main.cpp \
-    mainwindow.cpp
+    cgmainwindow.cpp \
+    cgeditor.cpp

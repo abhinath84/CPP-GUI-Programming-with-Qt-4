@@ -9,14 +9,14 @@ class QLabel;
 class QMdiArea;
 class QMenu;
 class QToolBar;
-class Editor;
+class CGEditor;
 
-class MainWindow : public QMainWindow
+class CGMainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow();
+    CGMainWindow();
 
 public slots:
     void newFile();
@@ -41,8 +41,8 @@ private:
     void createMenus();
     void createToolBars();
     void createStatusBar();
-    void addEditor(Editor *editor);
-    Editor *activeEditor();
+    void addEditor(CGEditor *editor);
+    CGEditor *activeEditor();
 
     QMdiArea *mdiArea;
     QLabel *readyLabel;
